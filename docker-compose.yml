@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  # Define an InfluxDB service
+  influxdb:
+    image: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      INFLUXDB_DB: envs
+
+  # Define a Grafana service
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_PATHS_PROVISIONING: /var/lib/grafana/provisioning/
+    volumes:
+      - ./provisioning/:/var/lib/grafana/provisioning/
+      - ./dashboards/:/var/lib/grafana/dashboards/
+    links:
+      - influxdb
